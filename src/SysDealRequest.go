@@ -17,8 +17,8 @@ type SysDealRequest struct{
 }
 
 func (this *SysDealRequest)Init(){
-	go this.log.Init()
 	this.configInfo.Init()
+	go this.log.Init(this.configInfo.LogFilePath)
 }
 func (this *SysDealRequest)PreDealRequestPath(path string)string{
 	if ok,_:=regexp.MatchString(".[cC][sS]{2}|.[jJ][sS]|.ico|(?i).+?\\.(jpg|gif|bmp).*",path);!ok{
