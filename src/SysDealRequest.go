@@ -8,12 +8,12 @@ import (
 	"os"
 	"io/ioutil"
 	"regexp"
-	"strings"
 )
 
 type SysDealRequest struct{
 	configInfo model.ConfigInfo
 	log logs.Logs
+	header *SysDealHeader
 }
 
 func (this *SysDealRequest)Init(){
@@ -26,29 +26,13 @@ func (this *SysDealRequest)PreDealRequestPath(path string)string{
 	}
 	return path
 }
-func (this *SysDealRequest)getClientAcceptFile(ftype string,req *http.Request)bool{
-	ftypes:=strings.Split(",",req.Header.Get("Accept"))
-	for i:=0;i<len(ftypes);i++{
-		if ok,_:=regexp.MatchString(strings.ToLower(ftypes[i]),strings.ToLower(ftype));ok{
-			return true;
-		}
-	}
-	return false;
-}
+
 func (this *SysDealRequest)dealRequest(rep http.ResponseWriter,req *http.Request){
 	//Http Header
-	accpetedtype:=[]string{"text/css"}
-	contenttype:=""
-	for i:=0;i<len(accpetedtype);i++ {
-		if this.getClientAcceptFile(accpetedtype[i], req) {
-			if contenttype==""{
-				contenttype=accpetedtype[i];
-			}else{
-				contenttype+=(","+accpetedtype[i])
-			}
-		}
-	}
-	rep.Header().Set("Content-type", contenttype)
+	this.header=&SysDealHeader{Request:req,Response:rep}
+	this.header.Init()
+	rep=this.header.Response
+
 	path:=req.RequestURI
 	path = this.PreDealRequestPath(path)
 	file,err:=os.Open("./"+this.configInfo.StaticBasePath+path)
