@@ -35,8 +35,6 @@ func (this *InitConfig)Init(){
 			v := strings.Trim(maps[1], " ")
 			this.value[k] = v
 		}
-
-
 	}
 }
 func (this *InitConfig)GetKey(key string)string{

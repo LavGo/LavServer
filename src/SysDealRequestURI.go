@@ -33,7 +33,7 @@ func (this *SysDealRequestURI)FiltStaticPath(){
 }
 
 func (this *SysDealRequestURI)FilteHtmlpath(){
-	if strings.HasSuffix(this.uri,".html|.htm"){
+	if strings.HasSuffix(this.uri,".html")||strings.HasSuffix(this.uri,".htm"){
 		this.flag=false
 		this.uri=this.configInfo.HtmlBasePath+this.uri
 	}

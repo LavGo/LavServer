@@ -29,8 +29,7 @@ func (this *SysDealRequest)dealRequest(rep http.ResponseWriter,req *http.Request
 	//处理uri
 	this.uri=&SysDealRequestURI{uri:req.RequestURI,configInfo:this.configInfo}
 	this.uri.Init()
-	path := "./"+this.uri.GetURI()
-	file,err:=os.Open(path)
+	file,err:=os.Open(this.uri.GetURI())
 	defer file.Close()
 	if err != nil{
 		if os.IsNotExist(err){

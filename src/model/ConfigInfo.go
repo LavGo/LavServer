@@ -19,10 +19,10 @@ func (this *ConfigInfo)Init(){
 	this.Config=new(InitConfig)
 	this.Config.Init()
 
-	this.StaticBasePath="view"
+	this.StaticBasePath="./view/"
 	this.HtmlBasePath = "/static/html"
-	this.CssBasePath="view/css"
-	this.JsBasePath="view/js"
+	this.CssBasePath="/static/css"
+	this.JsBasePath="/static/js"
 	//this.LogFilePath="LavServer.log"
 	this.Port="50101"
 	this.MaxThread = 10
@@ -47,6 +47,8 @@ func (this *ConfigInfo)Init(){
 	if this.Config.GetKey("maxthread")!=""{
 		v,_:=strconv.Atoi(this.Config.GetKey("maxthread"))
 		this.MaxThread=int32(v)
-
 	}
+	this.HtmlBasePath=this.StaticBasePath+this.HtmlBasePath
+	this.CssBasePath=this.StaticBasePath+this.CssBasePath
+	this.JsBasePath=this.StaticBasePath+this.JsBasePath
 }
