@@ -26,7 +26,9 @@ func (this *InitConfig)Init(){
 		}else if err !=nil{
 			panic(err)
 		}
-
+		if strings.Index(string(b),"#") >=0{
+			continue
+		}
 		maps:=strings.Split(string(b),"=")
 		if len(maps) ==2 {
 			k := strings.ToLower(strings.Trim(maps[0], " "))

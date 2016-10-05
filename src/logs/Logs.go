@@ -3,6 +3,7 @@ package logs
 import (
 	"log"
 	"os"
+	"fmt"
 )
 
 type Logs struct{
@@ -11,14 +12,19 @@ type Logs struct{
 }
 func (this *Logs)Init(path string){
 	//file,_:=os.Create("LavServer.log")
+	fmt.Println(path)
 	if path != ""{
-		f,err:=os.Open(path)
+		f,err:=os.Create(path)
 		defer f.Close()
 		if err ==nil {
 			this.sysLog = log.New(f, "", log.LstdFlags)
+		}else{
+			fmt.Println(err)
 		}
+		return
+	}else{
+		this.sysLog = log.New(os.Stdout,"",log.LstdFlags)
 	}
-	this.sysLog = log.New(os.Stdout,"",log.LstdFlags)
 }
 func (this *Logs)LogsPreoutPut()(string){
      return ""

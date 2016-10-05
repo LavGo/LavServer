@@ -23,7 +23,7 @@ func (this *ConfigInfo)Init(){
 	this.HtmlBasePath = "/static/html"
 	this.CssBasePath="view/css"
 	this.JsBasePath="view/js"
-	this.LogFilePath="LavServer.log"
+	//this.LogFilePath="LavServer.log"
 	this.Port="50101"
 	this.MaxThread = 10
 	if this.Config.GetKey("staticbasepath")!=""{

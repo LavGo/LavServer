@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 	"regexp"
+	"strconv"
 )
 
 type SysDealHeader struct {
@@ -35,4 +36,12 @@ func (this *SysDealHeader)SetResponseContentType(){
 		}
 	}
 	this.Response.Header().Set("Content-type", contenttype)
+}
+
+func (this *SysDealHeader)SetStatusCode(code int){
+	if code == 404 {
+		http.NotFound(this.Response, this.Request)
+	}
+	if code == 500{
+	}
 }
