@@ -9,9 +9,14 @@ import (
 type SysDealHeader struct {
 	Request *http.Request
 	Response http.ResponseWriter
+	Accept []string
 }
 func (this *SysDealHeader)Init(){
+	this.initHeader()
 	this.SetResponseContentType()
+}
+func (this *SysDealHeader)initHeader(){
+	this.Accept=strings.Split(this.Request.Header.Get("Accept"),",")
 }
 func (this *SysDealHeader)getClientAcceptFile(ftype string,req *http.Request)bool{
 	ftypes:=strings.Split(req.Header.Get("Accept"),",")
@@ -42,5 +47,6 @@ func (this *SysDealHeader)SetStatusCode(code int){
 		http.NotFound(this.Response, this.Request)
 	}
 	if code == 500{
+		http.Error(this.Response,"something failed!",http.StatusInternalServerError)
 	}
 }

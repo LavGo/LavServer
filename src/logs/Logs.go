@@ -12,19 +12,23 @@ type Logs struct{
 }
 func (this *Logs)Init(path string){
 	//file,_:=os.Create("LavServer.log")
-	fmt.Println(path)
+	fmt.Println("Init Log System...")
 	if path != ""{
 		f,err:=os.Create(path)
-		defer f.Close()
 		if err ==nil {
+			fmt.Println("Log write To : ",path)
 			this.sysLog = log.New(f, "", log.LstdFlags)
-		}else{
+		}else {
 			fmt.Println(err)
+			goto stderrout
 		}
+		defer f.Close()
 		return
-	}else{
-		this.sysLog = log.New(os.Stdout,"",log.LstdFlags)
 	}
+	stderrout:
+	fmt.Println("Log write To : StdOut.")
+	this.sysLog = log.New(os.Stdout,"",log.LstdFlags)
+	fmt.Println("Log System Started.")
 }
 func (this *Logs)LogsPreoutPut()(string){
      return ""

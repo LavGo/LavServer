@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"io/ioutil"
+	"fmt"
 )
 
 type SysDealRequest struct{
@@ -18,10 +19,17 @@ type SysDealRequest struct{
 
 func (this *SysDealRequest)Init(){
 	this.configInfo.Init()
-	go this.log.Init(this.configInfo.LogFilePath)
+	this.log.Init(this.configInfo.LogFilePath)
+	fmt.Println("LavServer init...")
 }
 
 func (this *SysDealRequest)dealRequest(rep http.ResponseWriter,req *http.Request){
+	defer func(){
+		if r:=recover();r!=nil{
+			this.log.Error(r)
+			this.header.SetStatusCode(500)
+		}
+	}()
 	//Http Header
 	this.header=&SysDealHeader{Request:req,Response:rep}
 	this.header.Init()
@@ -35,11 +43,12 @@ func (this *SysDealRequest)dealRequest(rep http.ResponseWriter,req *http.Request
 		if os.IsNotExist(err){
 			this.header.SetStatusCode(404)
 		}
-		this.log.Error(err)
+		return
+		panic(err)
 	}
 	filebuf,err:=ioutil.ReadAll(file)
 	if err != nil{
-		this.log.Error(err)
+		panic(err)
 	}
 
 	rep=this.header.Response
@@ -50,6 +59,7 @@ func (this *SysDealRequest)DealRequest(){
 }
 func (this *SysDealRequest)Start(){
 	this.DealRequest()
+	fmt.Println("LavServer Started.")
 	err:=http.ListenAndServe(":"+this.configInfo.Port,nil)
 	if err != nil{
 		this.log.Error(err)
