@@ -4,8 +4,8 @@ A Static File Server base on golang(一个基于Golang的Web静态服务器)
 #### Install
 首先自行安装Golang环境
 ```
-Go get https://github.com/LavGo/LavServer/tree/Version-1.0.0
-go install https://github.com/LavGo/LavServer/tree/Version-1.0.0
+Go get github.com/LavGo/LavServer/tree/Version-1.0.0
+go install github.com/LavGo/LavServer/tree/Version-1.0.0
 ```
 
 ```
