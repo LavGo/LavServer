@@ -33,9 +33,8 @@ func (this *SysDealRequest)dealRequest(rep http.ResponseWriter,req *http.Request
 	//Http Header
 	this.header=&SysDealHeader{Request:req,Response:rep}
 	this.header.Init()
-
 	//处理uri
-	this.uri=&SysDealRequestURI{uri:req.RequestURI,configInfo:this.configInfo}
+	this.uri=&SysDealRequestURI{uri:req.RequestURI,configInfo:this.configInfo,header:this.header}
 	this.uri.Init()
 	file,err:=os.Open(this.uri.GetURI())
 	defer file.Close()
@@ -51,7 +50,9 @@ func (this *SysDealRequest)dealRequest(rep http.ResponseWriter,req *http.Request
 		panic(err)
 	}
 
-	rep=this.header.Response
+	//rep=this.header.Response
+	//设置返回http报头
+	this.header.SetResponseHeader()
 	io.WriteString(rep,string(filebuf))
 }
 func (this *SysDealRequest)DealRequest(){

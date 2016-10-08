@@ -4,19 +4,21 @@ import (
 	"net/http"
 	"strings"
 	"regexp"
+	"github.com/LavGo/LavServer/src/tools"
 )
 
 type SysDealHeader struct {
 	Request *http.Request
 	Response http.ResponseWriter
-	Accept []string
+	RequestAccept []string
+	ResponseContentType string
 }
 func (this *SysDealHeader)Init(){
 	this.initHeader()
-	this.SetResponseContentType()
+	//this.SetResponseContentType()
 }
 func (this *SysDealHeader)initHeader(){
-	this.Accept=strings.Split(this.Request.Header.Get("Accept"),",")
+	this.RequestAccept=strings.Split(this.Request.Header.Get("Accept"),",")
 }
 func (this *SysDealHeader)getClientAcceptFile(ftype string,req *http.Request)bool{
 	ftypes:=strings.Split(req.Header.Get("Accept"),",")
@@ -27,26 +29,28 @@ func (this *SysDealHeader)getClientAcceptFile(ftype string,req *http.Request)boo
 	}
 	return false;
 }
-func (this *SysDealHeader)SetResponseContentType(){
-	accpetedtype:=[]string{"text/css"}
-	contenttype:=""
-	for i:=0;i<len(accpetedtype);i++ {
-		if this.getClientAcceptFile(accpetedtype[i], this.Request) {
-			if contenttype==""{
-				contenttype=accpetedtype[i];
-			}else{
-				contenttype+=(","+accpetedtype[i])
-			}
+func (this *SysDealHeader)SetResponseContentType(ftype string){
+	//accpetedtype:=[]string{"text/css"}
+	if tools.Contains(this.RequestAccept,ftype){
+		if this.ResponseContentType==""{
+			this.ResponseContentType=ftype;
+		}else{
+			this.ResponseContentType+=(","+ftype)
 		}
 	}
-	this.Response.Header().Set("Content-type", contenttype)
-}
 
+}
+func (this *SysDealHeader)SetResponseHeader(){
+	if this.ResponseContentType != ""{
+		this.Response.Header().Set("Content-Type",this.ResponseContentType)
+	}
+}
 func (this *SysDealHeader)SetStatusCode(code int){
 	if code == 404 {
 		http.NotFound(this.Response, this.Request)
 	}
 	if code == 500{
 		http.Error(this.Response,"something failed!",http.StatusInternalServerError)
+
 	}
 }
